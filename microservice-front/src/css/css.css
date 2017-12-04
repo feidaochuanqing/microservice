@@ -1,0 +1,9 @@
+.logo{
+  background-image: url(/src/images/microservice.svg) ;
+  height:50px;
+  background-repeat:no-repeat;
+  padding-left: 52px;
+  color: blue;
+  font-size: 18px;
+  vertical-align: middle;
+}
