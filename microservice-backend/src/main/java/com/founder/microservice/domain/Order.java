@@ -14,6 +14,12 @@ import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.GenericGenerator;
 
+/**
+ * 订单实体
+ * @author: lizhch
+ * @date: 2017年12月4日 下午4:53:11  
+ * @version V1.0
+ */
 @Entity  
 @GenericGenerator(name="uuid_s",strategy="uuid") 
 @Table(name="trade_order")  

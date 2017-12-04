@@ -4,8 +4,9 @@ import java.io.Serializable;
 
 /**
  * 操作类结果
- * @author vmsdev
- *
+ * @author: lizhch
+ * @date: 2017年12月4日 下午4:54:25  
+ * @version V1.0
  */
 public class ActionResult implements Serializable {
 	private static final long serialVersionUID = 1L;

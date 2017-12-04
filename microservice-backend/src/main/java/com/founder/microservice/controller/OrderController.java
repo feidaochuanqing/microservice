@@ -20,6 +20,12 @@ import com.founder.microservice.domain.result.PageBean;
 import com.founder.microservice.service.OrderService;
 import com.founder.microservice.service.ProductService;
 
+/**
+ * 订单控制器类
+ * @author: lizhch
+ * @date: 2017年12月4日 下午4:52:18  
+ * @version V1.0
+ */
 @RestController
 @RequestMapping("/order")
 public class OrderController extends BaseController {

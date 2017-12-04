@@ -12,6 +12,12 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+/**
+ * 产品实体
+ * @author: lizhch
+ * @date: 2017年12月4日 下午4:53:22  
+ * @version V1.0
+ */
 @Entity
 @Table(name = "masterdata_product")
 public class Product implements Serializable {

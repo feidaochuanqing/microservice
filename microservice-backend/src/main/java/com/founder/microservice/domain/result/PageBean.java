@@ -6,8 +6,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 分页组件.
- * @author：lizhch
+ * 分页组件
+ * @author: lizhch
+ * @date: 2017年12月4日 下午4:54:48  
+ * @version V1.0
  */
 public class PageBean<T> implements Serializable {
     private static final long serialVersionUID = 8470697978259453214L;

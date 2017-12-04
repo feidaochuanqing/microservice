@@ -47,24 +47,6 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
 	}
 
 	@Override
-	@Transactional
-	@Modifying
-	public void deleteLogic(ProductCategory product) {
-		ProductCategory orderInDb = this.productCategoryRepository.findOne(product.getId());
-		orderInDb.setIsDeleted(true);
-		orderInDb.setDeleteTime(new Date());
-		orderInDb.setDeleteUser(product.getDeleteUser());
-	}
-
-	@Override
-	@Transactional
-	@Modifying
-	public void delete(ProductCategory product) {
-		ProductCategory orderInDb = this.productCategoryRepository.findOne(product.getId());
-		this.productCategoryRepository.delete(orderInDb);
-	}
-
-	@Override
 	public PageBean<ProductCategory> listByCriteria(final ProductCategory category, int pageNumber, int pageSize) {
 		Page<ProductCategory> page = this.productCategoryRepository.findAll(new Specification<ProductCategory>() {
 			@Override

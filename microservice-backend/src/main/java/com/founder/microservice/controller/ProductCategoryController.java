@@ -21,6 +21,12 @@ import com.founder.microservice.service.ProductCategoryService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 
+/**
+ * 产品类别控制器
+ * @author: lizhch
+ * @date: 2017年12月4日 下午4:52:38  
+ * @version V1.0
+ */
 @RestController
 @RequestMapping("/productCategory")
 public class ProductCategoryController extends BaseController {

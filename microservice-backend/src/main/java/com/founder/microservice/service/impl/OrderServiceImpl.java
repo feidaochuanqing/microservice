@@ -49,24 +49,6 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
-	@Transactional
-	@Modifying
-	public void deleteLogic(Order order) {
-		Order orderInDb = this.orderRepository.findOne(order.getId());
-		orderInDb.setIsDeleted(true);
-		orderInDb.setDeleteTime(new Date());
-		orderInDb.setDeleteUser(order.getDeleteUser());
-	}
-
-	@Override
-	@Transactional
-	@Modifying
-	public void delete(Order order) {
-		Order orderInDb = this.orderRepository.findOne(order.getId());
-		this.orderRepository.delete(orderInDb);
-	}
-
-	@Override
 	public PageBean<Order> listByProductName(final String productName, int pageNumber, int pageSize) {
 		Page<Order> page = this.orderRepository.findAll(new Specification<Order>() {
 			@Override

@@ -9,6 +9,12 @@ import org.springframework.context.annotation.PropertySource;
 
 import com.alibaba.druid.pool.DruidDataSource;
 
+/**
+ * 数据源配置
+ * @author: lizhch
+ * @date: 2017年12月4日 下午4:50:33  
+ * @version V1.0
+ */
 @Configuration
 @PropertySource("classpath:jdbc.properties")
 public class DataSourceConfig {

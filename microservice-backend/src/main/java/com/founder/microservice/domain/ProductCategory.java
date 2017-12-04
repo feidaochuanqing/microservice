@@ -16,6 +16,12 @@ import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+/**
+ * 产品类别实体
+ * @author: lizhch
+ * @date: 2017年12月4日 下午4:53:32  
+ * @version V1.0
+ */
 @Entity
 @Table(name = "masterdata_product_category")
 public class ProductCategory implements Serializable {

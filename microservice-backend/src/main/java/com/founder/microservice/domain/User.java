@@ -1,5 +1,11 @@
 package com.founder.microservice.domain;
 
+/**
+ * 用户实体，获取静态的用户
+ * @author: lizhch
+ * @date: 2017年12月4日 下午4:53:51  
+ * @version V1.0
+ */
 public class User {
 	private Long id;
 	private String name;

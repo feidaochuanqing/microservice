@@ -11,6 +11,12 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+/**
+ * web 配置
+ * @author: lizhch
+ * @date: 2017年12月4日 下午4:51:29  
+ * @version V1.0
+ */
 @Configuration
 public class WebConfig extends WebMvcConfigurerAdapter{
 

@@ -21,6 +21,12 @@ import com.founder.microservice.domain.result.PageBean;
 import com.founder.microservice.service.ProductCategoryService;
 import com.founder.microservice.service.ProductService;
 
+/**
+ * 产品控制器
+ * @author: lizhch
+ * @date: 2017年12月4日 下午4:52:54  
+ * @version V1.0
+ */
 @RestController
 @RequestMapping("/product")
 public class ProductController extends BaseController {

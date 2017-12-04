@@ -9,6 +9,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+/**
+ * 控制器基类
+ * @author: lizhch
+ * @date: 2017年12月4日 下午4:51:47  
+ * @version V1.0
+ */
 @Controller
 public class BaseController {
 	protected Logger logger = Logger.getLogger(this.getClass());

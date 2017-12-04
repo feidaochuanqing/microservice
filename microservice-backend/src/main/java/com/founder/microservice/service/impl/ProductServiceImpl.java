@@ -49,24 +49,6 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	@Transactional
-	@Modifying
-	public void deleteLogic(Product product) {
-		Product orderInDb = this.productRepository.findOne(product.getId());
-		orderInDb.setIsDeleted(true);
-		orderInDb.setDeleteTime(new Date());
-		orderInDb.setDeleteUser(product.getDeleteUser());
-	}
-
-	@Override
-	@Transactional
-	@Modifying
-	public void delete(Product product) {
-		Product orderInDb = this.productRepository.findOne(product.getId());
-		this.productRepository.delete(orderInDb);
-	}
-
-	@Override
 	public PageBean<Product> listByCriteria(final Product product, int pageNumber, int pageSize) {
 		Page<Product> page = this.productRepository.findAll(new Specification<Product>() {
 			@Override

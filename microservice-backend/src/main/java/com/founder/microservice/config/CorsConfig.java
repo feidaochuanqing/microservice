@@ -5,6 +5,12 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+/**
+ * 允许跨站点调用
+ * @author: lizhch
+ * @date: 2017年12月4日 下午4:50:45  
+ * @version V1.0
+ */
 @Configuration
 public class CorsConfig {
     private CorsConfiguration buildConfig() {
