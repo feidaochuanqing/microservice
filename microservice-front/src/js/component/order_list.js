@@ -1,15 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Table ,Button, Icon, Popconfirm, message } from 'antd';
+import { Table, Button, Icon, Popconfirm, message } from 'antd';
 import { Input } from 'antd';
 import reqwest from 'reqwest';
 import OrderComponent from './order.js'
 import PubSub from 'pubsub-js';
 
 const Search = Input.Search;
-const deleteOrderEvent ="deleteOrder";
-const updateProductyEvent ="updateProduct";
+const deleteOrderEvent = "deleteOrder";
+const updateProductyEvent = "updateProduct";
 
+//订单列表组件
 export default class OrderComponentList extends React.Component {
   constructor() {
     super();
@@ -17,36 +18,36 @@ export default class OrderComponentList extends React.Component {
       data: [],
       pagination: {},
       loading: false,
-      categoryName :'',
-      editOrder:{},
-      isShowOrder:false
+      categoryName: '',
+      editOrder: {},
+      isShowOrder: false
+    }
   }
-}
 
   //删除之后进行提示并重新加载数据
-  onDelete(e,key){
-    var myFetchOptions = {method:'GET'};
+  onDelete(e, key) {
+    var myFetchOptions = { method: 'GET' };
     const returnjson = {};
     let url = "http://localhost:8011/order/delete?orderId=" + key;
-    fetch(url,myFetchOptions)
-      .then(response=>response.json())
-      .then(json=>{
+    fetch(url, myFetchOptions)
+      .then(response => response.json())
+      .then(json => {
         console.log("json->" + json);
-        if(json.isOk) {
-            message.success(json.message);
-            this.fetch();
+        if (json.isOk) {
+          message.success(json.message);
+          this.fetch();
         } else {
-            message.error(json.message);
+          message.error(json.message);
         }
-  });
-}
-
-  //显示更新窗体
-  onUpdate(e,order){
-    this.setState({editOrder:order,isShowOrder:true});
+      });
   }
 
+  //显示更新窗体
+  onUpdate(e, order) {
+    this.setState({ editOrder: order, isShowOrder: true });
+  }
 
+  //分页查询
   handleTableChange(pagination, filters, sorter) {
     const pager = this.state.pagination;
     pager.current = pagination.current;
@@ -55,9 +56,9 @@ export default class OrderComponentList extends React.Component {
     });
 
     const params = {
-      pageSize :pagination.pageSize,
+      pageSize: pagination.pageSize,
       pageNumber: pagination.current,
-      productName:this.state.queryProductName
+      productName: this.state.queryProductName
     };
     this.fetch(params);
   }
@@ -65,23 +66,23 @@ export default class OrderComponentList extends React.Component {
   //创建框
   handleShowCategory(e) {
     let editOrder = {
-      id:'',
-      count:'',
-      address:'',
-      product:{
-        id:"",
-        productName:"",
-        productCategory:{
-          id:"",
-          categoryName:""
+      id: '',
+      count: '',
+      address: '',
+      product: {
+        id: "",
+        productName: "",
+        productCategory: {
+          id: "",
+          categoryName: ""
         }
       }
     };
-    this.setState({editOrder:editOrder,isShowOrder:true});
+    this.setState({ editOrder: editOrder, isShowOrder: true });
   }
 
 
-  fetch(params={}) {
+  fetch(params = {}) {
     console.log('params:', params);
     this.setState({ loading: true });
 
@@ -107,8 +108,8 @@ export default class OrderComponentList extends React.Component {
   componentDidMount() {
     PubSub.unsubscribe(deleteOrderEvent);
     PubSub.unsubscribe(updateProductyEvent);
-    PubSub.subscribe(deleteOrderEvent,this.onDelete.bind(this));
-    PubSub.subscribe(updateProductyEvent,this.onUpdate.bind(this));
+    PubSub.subscribe(deleteOrderEvent, this.onDelete.bind(this));
+    PubSub.subscribe(updateProductyEvent, this.onUpdate.bind(this));
     this.fetch();
   }
 
@@ -120,13 +121,14 @@ export default class OrderComponentList extends React.Component {
     this.fetch();
   }
 
+  //查询按钮
   serchClick(value) {
     console.log("pagination:" + this.state.pagination);
     const pager = this.state.pagination;
     const params = {
-      pageSize : pager.pageSize,
+      pageSize: pager.pageSize,
       pageNumber: 1,
-      productName:value
+      productName: value
     };
     this.setState({
       queryProductName: value
@@ -150,13 +152,13 @@ export default class OrderComponentList extends React.Component {
       dataIndex: '',
       width: '10%',
       key: 'productId',
-      render: (text,record,index) => record.product.productCategory.categoryName
-    } , {
+      render: (text, record, index) => record.product.productCategory.categoryName
+    }, {
       title: '产品',
       dataIndex: '',
       width: '15%',
       key: 'productId',
-      render: (text,record,index) => record.product.productName
+      render: (text, record, index) => record.product.productName
     }, {
       title: '地址',
       dataIndex: 'address',
@@ -169,22 +171,22 @@ export default class OrderComponentList extends React.Component {
         return (
           <span>
             <Popconfirm title="确定删除么？?"
-            onConfirm={()=>{
-              PubSub.publish(deleteOrderEvent,record.id);
-            }}>
+              onConfirm={() => {
+                PubSub.publish(deleteOrderEvent, record.id);
+              }}>
               <a href="#">删除</a>
             </Popconfirm>
             &nbsp;&nbsp;&nbsp;&nbsp;
-              <a href="#" onClick={()=>{
-                PubSub.publish(updateProductyEvent,record);
-              }} >修改</a>
+              <a href="#" onClick={() => {
+              PubSub.publish(updateProductyEvent, record);
+            }} >修改</a>
           </span>
         );
       }
     }];
 
 
-    let showOrderComp = this.state.isShowOrder ?<OrderComponent
+    let showOrderComp = this.state.isShowOrder ? <OrderComponent
       orderId={this.state.editOrder.id}
 
       categoryId={this.state.editOrder.product.productCategory.id}
@@ -197,17 +199,17 @@ export default class OrderComponentList extends React.Component {
       address={this.state.editOrder.address}
 
       afterClosed={this.afterClosed.bind(this)}
-       /> : null;
+    /> : null;
     return (
       <div>
         {showOrderComp}
         <div style={{ marginBottom: 16 }}>
           <Search
-           placeholder="产品名称"
-           style={{ width: 200 }}
-           onSearch={this.serchClick.bind(this)}
+            placeholder="产品名称"
+            style={{ width: 200 }}
+            onSearch={this.serchClick.bind(this)}
           />
-          <Button style={{float:`right`}}
+          <Button style={{ float: `right` }}
             size="large" type="ghost" onClick={this.handleShowCategory.bind(this)}
           >
             创建
