@@ -17,9 +17,9 @@ export default class ProductListComponent extends React.Component {
     this.state = {
       data: [],
       pagination: {
-        total : 10,
-        pageSize : 10,
-        current : 1
+        total: 10,
+        pageSize: 10,
+        current: 1
       },
       loading: false,
       productName: 'all',
@@ -49,7 +49,14 @@ export default class ProductListComponent extends React.Component {
 
   //显示更新窗体
   onUpdate(e, product) {
-    this.setState({ editProduct: product, isShowProduct: true });
+    var categoryId = product.productCategory == undefined ? "" : product.productCategory.id;
+    var ctagoryName = product.productCategory == undefined ? "" : product.productCategory.categoryName;
+
+    let editProduct = {
+      id: product.id, productCode: product.productCode, productName: product.productName,
+      productCategory: { id: categoryId, categoryName: ctagoryName }
+    };
+    this.setState({ editProduct: editProduct, isShowProduct: true });
   }
 
   //分页查询
@@ -74,25 +81,25 @@ export default class ProductListComponent extends React.Component {
     myHeaders.append('Content-Type', 'application/json');
     let url = 'http://localhost:8011/product/listByPage/' + this.state.productName;
     let request = new Request(url, {
-          method: 'POST', 
-          mode: 'cors',
-          body:JSON.stringify(params),
-          headers:myHeaders
+      method: 'POST',
+      mode: 'cors',
+      body: JSON.stringify(params),
+      headers: myHeaders
     });
 
     fetch(request)
-      .then(response=>response.json())
-      .then(data=>{
-      const pagination = this.state.pagination;
-      pagination.total = data.totalCount;
-      pagination.pageSize = data.numPerPage;
-      pagination.current = data.currentPage;
-      this.setState({
-        loading: false,
-        data: data.recordList,
-        pagination: pagination
+      .then(response => response.json())
+      .then(data => {
+        const pagination = this.state.pagination;
+        pagination.total = data.totalCount;
+        pagination.pageSize = data.numPerPage;
+        pagination.current = data.currentPage;
+        this.setState({
+          loading: false,
+          data: data.recordList,
+          pagination: pagination
+        });
       });
-    });
   }
 
   //订阅事件
@@ -156,12 +163,7 @@ export default class ProductListComponent extends React.Component {
       }
     }];
     console.log("this.state.editproductid->" + this.state.editProduct.id);
-
-    if(this.state.editProduct[productCategory] == undefined) {
-      var productCategory = {id:'',categoryName:''};
-      this.state.editProduct.productCategory = productCategory;
-    }
-    
+ 
     let showProductComp = this.state.isShowProduct ? <ProductComponent
       productId={this.state.editProduct.id}
       productCode={this.state.editProduct.productCode}
