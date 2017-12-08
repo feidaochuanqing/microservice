@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.websocket.server.PathParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +48,7 @@ public class ProductController extends BaseController {
 			@ApiImplicitParam(paramType = "path", name = "productName", dataType = "String", required = true, value = "产品名称",defaultValue="苹果"),
 			@ApiImplicitParam(paramType = "body", name = "pageParam", dataType = "PageParam", value = "分页信息", required = true) })
 	@RequestMapping(value = "/product/listByPage/{productName}", method = RequestMethod.POST, consumes = "application/json; charset=UTF-8")
-	public PageBean<Product> listProductsByPage(@PathVariable("productName") String productName, @RequestBody PageParam pageParam) {
+	public PageBean<Product> listByPage(@PathVariable("productName") String productName, @RequestBody PageParam pageParam) {
 		Product condition = new Product();
 		if(productName != null) {
 			if(productName.equals("all")) {
@@ -84,7 +83,7 @@ public class ProductController extends BaseController {
 	@ApiOperation(value = "查询", notes = "根据产品分类进行产品查询")
 	@ApiImplicitParam(paramType = "path", name = "categoryId", dataType = "String", required = true, value = "类别主键")
 	@RequestMapping(value = "/product/listByCategory/{categoryId}",method = RequestMethod.GET)
-	public PageBean<Product> listAll(@PathParam("categoryId") String categoryId) {
+	public PageBean<Product> listByCategory(@PathVariable("categoryId") String categoryId) {
 		PageBean<Product> pageBean = null;
 		try {
 			List<Product> products = null;

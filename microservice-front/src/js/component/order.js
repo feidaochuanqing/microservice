@@ -104,24 +104,44 @@ class OrderComponent extends React.Component {
   //提交按钮
   handleSubmit(e) {
     e.preventDefault();
-    var myFetchOptions = {
-      method: 'GET'
-    };
+    
+    var formData = this.props.form.getFieldsValue();
+    var params = {
+      id:formData.r_orderId,
+      count:formData.r_count,
+      address:formData.r_address
+    }
 
-    let formData = this.props.form.getFieldsValue();
-    let param = "productId=" + this.state.selectedProduct + "&count=" + formData.r_count + "&address=" + formData.r_address;
-    let url = formData.r_orderId == '' ? "http://localhost:8011/order/insert?" + param :
-      "http://localhost:8011/order/update?" + "orderId=" + formData.r_orderId + "&" + param;
-    fetch(url, myFetchOptions)
+    let url = "http://localhost:8011/order/" ;
+    if(formData.r_orderId == '') {
+      //插入
+      url = url + formData.r_productId;
+    } else {
+      //修改
+      url = url + formData.r_orderId + "/" + formData.r_productId  ;
+    }
+
+    let myHeaders = new Headers();
+    myHeaders.append('Content-Type', 'application/json');
+    
+    var method = formData.r_orderId == "" ? 'POST' : 'PUT';
+    var request = new Request(url, {
+          method: method,
+          mode: 'cors',
+          body:JSON.stringify(params),
+          headers: myHeaders
+    });
+    fetch(request)
       .then(response => response.json())
       .then(json => {
         if (json.isOk) {
           message.success(json.message);
+          this.setModalVisible(false);
         } else {
           message.error(json.message);
+          this.setModalVisible(false);
         }
       });
-    this.setModalVisible(false);
   }
 
   render() {

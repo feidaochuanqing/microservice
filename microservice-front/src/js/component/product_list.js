@@ -157,6 +157,11 @@ export default class ProductListComponent extends React.Component {
     }];
     console.log("this.state.editproductid->" + this.state.editProduct.id);
 
+    if(this.state.editProduct[productCategory] == undefined) {
+      var productCategory = {id:'',categoryName:''};
+      this.state.editProduct.productCategory = productCategory;
+    }
+    
     let showProductComp = this.state.isShowProduct ? <ProductComponent
       productId={this.state.editProduct.id}
       productCode={this.state.editProduct.productCode}

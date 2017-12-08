@@ -138,12 +138,12 @@ export default class OrderComponentList extends React.Component {
     let columns = [{
       title: '订单编号',
       dataIndex: 'id',
-      width: '30%',
+      width: '25%',
       key: 'id'
     }, {
       title: '数量',
       dataIndex: 'count',
-      width: '10%',
+      width: '5%',
       key: 'count'
     }, {
       title: '产品类别',
@@ -160,7 +160,7 @@ export default class OrderComponentList extends React.Component {
     }, {
       title: '地址',
       dataIndex: 'address',
-      width: '15%',
+      width: '35%',
       key: 'address'
     }, {
       title: '操作',
