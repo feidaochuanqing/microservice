@@ -17,6 +17,7 @@
     "babel-preset-stage-0": "^6.24.1",
     "babelify": "^8.0.0",
     "css-loader": "^0.28.7",
+    "fetch": "^1.1.0",
     "pubsub-js": "^1.5.7",
     "react": "^16.1.1",
     "react-dom": "^16.1.1",

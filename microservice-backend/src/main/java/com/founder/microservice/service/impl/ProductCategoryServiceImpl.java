@@ -52,7 +52,7 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
 			@Override
 			public Predicate toPredicate(Root<ProductCategory> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
 				Path<String> nameExp = root.get("categoryName");
-				Predicate p1 = cb.like(nameExp, "%" + category.getCategoryName());
+				Predicate p1 = cb.like(nameExp, "%" + category.getCategoryName() + "%" );
 				Path<Boolean> isDeleteExp = root.get("isDeleted");
 				Predicate p2 = cb.isFalse(isDeleteExp);
 				return cb.and(p2, cb.and(p1));

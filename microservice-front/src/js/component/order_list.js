@@ -16,26 +16,31 @@ export default class OrderComponentList extends React.Component {
     super();
     this.state = {
       data: [],
-      pagination: {},
+      pagination: {
+        total : 10,
+        pageSize : 10,
+        current : 1
+      },
       loading: false,
       categoryName: '',
       editOrder: {},
-      isShowOrder: false
+      isShowOrder: false,
+      queryProductName: 'all'
     }
   }
 
   //删除之后进行提示并重新加载数据
   onDelete(e, key) {
-    var myFetchOptions = { method: 'GET' };
+    var myFetchOptions = { method: 'DELETE' };
     const returnjson = {};
-    let url = "http://localhost:8011/order/delete?orderId=" + key;
+    let url = "http://localhost:8011/order/" + key;
     fetch(url, myFetchOptions)
       .then(response => response.json())
       .then(json => {
         console.log("json->" + json);
         if (json.isOk) {
           message.success(json.message);
-          this.fetch();
+          this.loadData();
         } else {
           message.error(json.message);
         }
@@ -49,18 +54,8 @@ export default class OrderComponentList extends React.Component {
 
   //分页查询
   handleTableChange(pagination, filters, sorter) {
-    const pager = this.state.pagination;
-    pager.current = pagination.current;
-    this.setState({
-      pagination: pager
-    });
-
-    const params = {
-      pageSize: pagination.pageSize,
-      pageNumber: pagination.current,
-      productName: this.state.queryProductName
-    };
-    this.fetch(params);
+    this.state.pagination.current = pagination.current;
+    this.loadData();
   }
 
   //创建框
@@ -82,26 +77,36 @@ export default class OrderComponentList extends React.Component {
   }
 
 
-  fetch(params = {}) {
+  loadData(params = {}) {
     console.log('params:', params);
     this.setState({ loading: true });
 
-    reqwest({
-      url: 'http://localhost:8011/order/listByPage',
-      method: 'get',
-      data: params,
-      type: 'json',
-    }).then((data) => {
-      const pagination = this.state.pagination;
-      pagination.total = data.totalCount;
-      pagination.pageSize = data.numPerPage;
-      pagination.current = data.currentPage;
-      this.setState({
-        loading: false,
-        data: data.recordList,
-        pagination: pagination
-      });
+    params.pageNum = this.state.pagination.current;
+    params.numPerPage = this.state.pagination.pageSize;
+
+    let myHeaders = new Headers();
+    myHeaders.append('Content-Type', 'application/json');
+    let url = 'http://localhost:8011/order/listByPage/' + this.state.queryProductName;
+    let request = new Request(url, {
+      method: 'POST',
+      mode: 'cors',
+      body: JSON.stringify(params),
+      headers: myHeaders
     });
+
+    fetch(request)
+      .then(response => response.json())
+      .then(data => {
+        const pagination = this.state.pagination;
+        pagination.total = data.totalCount;
+        pagination.pageSize = data.numPerPage;
+        pagination.current = data.currentPage;
+        this.setState({
+          loading: false,
+          data: data.recordList,
+          pagination: pagination
+        });
+      });
   }
 
   //订阅事件
@@ -110,7 +115,7 @@ export default class OrderComponentList extends React.Component {
     PubSub.unsubscribe(updateProductyEvent);
     PubSub.subscribe(deleteOrderEvent, this.onDelete.bind(this));
     PubSub.subscribe(updateProductyEvent, this.onUpdate.bind(this));
-    this.fetch();
+    this.loadData();
   }
 
   //产品窗口关闭之后的事件处理
@@ -118,22 +123,15 @@ export default class OrderComponentList extends React.Component {
     this.setState({
       isShowOrder: false
     });
-    this.fetch();
+    this.loadData();
   }
 
   //查询按钮
   serchClick(value) {
     console.log("pagination:" + this.state.pagination);
-    const pager = this.state.pagination;
-    const params = {
-      pageSize: pager.pageSize,
-      pageNumber: 1,
-      productName: value
-    };
-    this.setState({
-      queryProductName: value
-    });
-    this.fetch(params);
+    this.state.pagination.current = 1;
+    this.state.queryProductName = (value == "" ? "all" : value);
+    this.loadData();
   }
 
   render() {

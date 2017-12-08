@@ -67,21 +67,32 @@ class ProductComponet extends React.Component {
     };
 
     var formData = this.props.form.getFieldsValue();
-    console.log("form data is ->" + formData);
-    console.log("form data productcode is ->" + formData.r_productCode);
-    let param = "productCode=" + formData.r_productCode + "&productName=" + formData.r_productName + "&productCategory=" + formData.r_productCategory;
-    let url = formData.r_productId == '' ? "http://localhost:8011/product/insert?" + param :
-      "http://localhost:8011/product/update?" + "productId=" + formData.r_productId + "&" + param;
+    let param = formData.r_productCategory +"/" + formData.r_productCode + "/" + formData.r_productName; 
+    let isInsert = false;
+    formData.r_productId == '' ? isInsert = true : isInsert = false;
+    let url = "http://localhost:8011/product/" ;
+    if(isInsert) {
+      //插入
+      url = url + param;
+      myFetchOptions.method = "PUT";
+    } else {
+      //修改
+      url = url + formData.r_productId + "/" + param;
+      myFetchOptions.method = "POST";
+    }
+    
     fetch(url, myFetchOptions)
       .then(response => response.json())
       .then(json => {
         if (json.isOk) {
           message.success(json.message);
+          this.setModalVisible(false);
         } else {
           message.error(json.message);
+          this.setModalVisible(false);
         }
       });
-    this.setModalVisible(false);
+    
   }
 
   render() {

@@ -16,9 +16,13 @@ export default class ProductListComponent extends React.Component {
     super();
     this.state = {
       data: [],
-      pagination: {},
+      pagination: {
+        total : 10,
+        pageSize : 10,
+        current : 1
+      },
       loading: false,
-      productName: '',
+      productName: 'all',
       editProduct: {},
       isShowProduct: false
     }
@@ -26,16 +30,16 @@ export default class ProductListComponent extends React.Component {
 
   //删除之后进行提示并重新加载数据
   onDelete(e, key) {
-    var myFetchOptions = { method: 'GET' };
+    var myFetchOptions = { method: 'DELETE' };
     const returnjson = {};
-    let url = "http://localhost:8011/product/delete?productId=" + key;
+    let url = "http://localhost:8011/product/" + key;
     fetch(url, myFetchOptions)
       .then(response => response.json())
       .then(json => {
         console.log("json->" + json);
         if (json.isOk) {
           message.success(json.message);
-          this.fetch();
+          this.loadData();
         } else {
           message.error(json.message);
         }
@@ -50,18 +54,8 @@ export default class ProductListComponent extends React.Component {
 
   //分页查询
   handleTableChange(pagination, filters, sorter) {
-    const pager = this.state.pagination;
-    pager.current = pagination.current;
-    this.setState({
-      pagination: pager
-    });
-
-    const params = {
-      pageSize: pagination.pageSize,
-      pageNumber: pagination.current,
-      productName: this.state.productName
-    };
-    this.fetch(params);
+    this.state.pagination.current = pagination.current;
+    this.loadData();
   }
 
   //创建框
@@ -70,15 +64,25 @@ export default class ProductListComponent extends React.Component {
     this.setState({ editProduct: editProduct, isShowProduct: true });
   }
 
-  fetch(params = {}) {
-    console.log('params:', params);
+  loadData(params = {}) {
     this.setState({ loading: true });
-    reqwest({
-      url: 'http://localhost:8011/product/listProductsByPage',
-      method: 'get',
-      data: params,
-      type: 'json',
-    }).then((data) => {
+
+    params.pageNum = this.state.pagination.current;
+    params.numPerPage = this.state.pagination.pageSize;
+
+    let myHeaders = new Headers();
+    myHeaders.append('Content-Type', 'application/json');
+    let url = 'http://localhost:8011/product/listByPage/' + this.state.productName;
+    let request = new Request(url, {
+          method: 'POST', 
+          mode: 'cors',
+          body:JSON.stringify(params),
+          headers:myHeaders
+    });
+
+    fetch(request)
+      .then(response=>response.json())
+      .then(data=>{
       const pagination = this.state.pagination;
       pagination.total = data.totalCount;
       pagination.pageSize = data.numPerPage;
@@ -97,7 +101,7 @@ export default class ProductListComponent extends React.Component {
     PubSub.unsubscribe(updateProductEvent);
     PubSub.subscribe(deleteProductEvent, this.onDelete.bind(this));
     PubSub.subscribe(updateProductEvent, this.onUpdate.bind(this));
-    this.fetch();
+    this.loadData();
   }
 
   //产品窗口关闭之后的事件处理
@@ -105,22 +109,15 @@ export default class ProductListComponent extends React.Component {
     this.setState({
       isShowProduct: false
     });
-    this.fetch();
+    this.loadData();
   }
 
   //搜索
   serchClick(value) {
     console.log("pagination:" + this.state.pagination);
-    const pager = this.state.pagination;
-    const params = {
-      pageSize: pager.pageSize,
-      pageNumber: 1,
-      productName: value
-    };
-    this.setState({
-      productName: value
-    });
-    this.fetch(params);
+    this.state.productName = (value == "" ? "all" : value);
+    this.state.pagination.current = 1;
+    this.loadData();
   }
 
   render() {

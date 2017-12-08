@@ -17,9 +17,13 @@ export default class ProductCategoryListComponent extends React.Component {
     super();
     this.state = {
       data: [],
-      pagination: {},
+      pagination: {
+        total : 10,
+        pageSize : 10,
+        current : 1
+      },
       loading: false,
-      categoryName: '',
+      categoryName: 'all',
       editCategory: {},
       isShowProduct: false
     }
@@ -27,16 +31,16 @@ export default class ProductCategoryListComponent extends React.Component {
 
   //删除之后进行提示并重新加载数据
   onDelete(e, key) {
-    var myFetchOptions = { method: 'GET' };
+    var myFetchOptions = { method: 'DELETE' };
     const returnjson = {};
-    let url = "http://localhost:8011/productCategory/delete?categoryId=" + key;
+    let url = "http://localhost:8011/productCategory/" + key;
     fetch(url, myFetchOptions)
       .then(response => response.json())
       .then(json => {
         console.log("json->" + json);
         if (json.isOk) {
           message.success(json.message);
-          this.fetch();
+          this.loadData();
         } else {
           message.error(json.message);
         }
@@ -51,18 +55,8 @@ export default class ProductCategoryListComponent extends React.Component {
 
   //分页
   handleTableChange(pagination, filters, sorter) {
-    const pager = this.state.pagination;
-    pager.current = pagination.current;
-    this.setState({
-      pagination: pager
-    });
-
-    const params = {
-      pageSize: pagination.pageSize,
-      pageNumber: pagination.current,
-      productName: this.state.productName
-    };
-    this.fetch(params);
+    this.state.pagination.current = pagination.current;
+    this.loadData();
   }
 
   //创建框
@@ -72,25 +66,36 @@ export default class ProductCategoryListComponent extends React.Component {
   }
 
   //加载数据
-  fetch(params = {}) {
+  loadData(params = {}) {
     console.log('params:', params);
     this.setState({ loading: true });
-    reqwest({
-      url: 'http://localhost:8011/productCategory/listByPage',
-      method: 'get',
-      data: params,
-      type: 'json',
-    }).then((data) => {
-      const pagination = this.state.pagination;
-      pagination.total = data.totalCount;
-      pagination.pageSize = data.numPerPage;
-      pagination.current = data.currentPage;
-      this.setState({
-        loading: false,
-        data: data.recordList,
-        pagination: pagination
-      });
+
+    params.pageNum = this.state.pagination.current;
+    params.numPerPage = this.state.pagination.pageSize;
+
+    let myHeaders = new Headers();
+    myHeaders.append('Content-Type', 'application/json');
+    let url = 'http://localhost:8011/productCategory/listByPage/' + this.state.categoryName;
+    let request = new Request(url, {
+          method: 'POST', 
+          mode: 'cors',
+          body:JSON.stringify(params),
+          headers:myHeaders
     });
+
+    fetch(request)
+      .then(response=>response.json())
+      .then(data=>{
+        const pagination = this.state.pagination;
+        pagination.total = data.totalCount;
+        pagination.pageSize = data.numPerPage;
+        pagination.current = data.currentPage;
+        this.setState({
+          loading: false,
+          data: data.recordList,
+          pagination: pagination
+        });
+      });
   }
 
   //订阅事件
@@ -99,7 +104,7 @@ export default class ProductCategoryListComponent extends React.Component {
     PubSub.unsubscribe(updateCategoryEvent);
     PubSub.subscribe(deleteCategoryEvent, this.onDelete.bind(this));
     PubSub.subscribe(updateCategoryEvent, this.onUpdate.bind(this));
-    this.fetch();
+    this.loadData();
   }
 
   //产品窗口关闭之后的事件处理
@@ -107,22 +112,14 @@ export default class ProductCategoryListComponent extends React.Component {
     this.setState({
       isShowProduct: false
     });
-    this.fetch();
+    this.loadData();
   }
 
   //搜索
   serchClick(value) {
-    console.log("pagination:" + this.state.pagination);
-    const pager = this.state.pagination;
-    const params = {
-      pageSize: pager.pageSize,
-      pageNumber: 1,
-      categoryName: value
-    };
-    this.setState({
-      categoryName: value
-    });
-    this.fetch(params);
+    this.state.pagination.current = 1;
+    this.state.categoryName = (value == "" ? "all" : value);
+    this.loadData();
   }
 
   render() {

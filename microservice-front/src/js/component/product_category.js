@@ -37,25 +37,35 @@ class ProductCategoryComponet extends React.Component {
   //处理提交事件
   handleSubmit(e) {
     e.preventDefault();
-    var myFetchOptions = {
-      method: 'GET'
-    };
-
-    var formData = this.props.form.getFieldsValue();
-
-    let param = "categoryCode=" + formData.r_categoryCode + "&categoryName=" + formData.r_categoryName;
-    let url = formData.r_categoryId == '' ? "http://localhost:8011/productCategory/insert?" + param :
-      "http://localhost:8011/productCategory/update?" + "categoryId=" + formData.r_categoryId + "&" + param;
-    fetch(url, myFetchOptions)
-      .then(response => response.json())
+    let formData = this.props.form.getFieldsValue();
+    let params = {};
+    params.id = formData.r_categoryId;
+    params.categoryCode = formData.r_categoryCode;
+    params.categoryName = formData.r_categoryName;
+    
+    let myHeaders = new Headers();
+    myHeaders.append('Content-Type', 'application/json');
+    var url = "http://localhost:8011/productCategory/";
+    
+    var request = new Request(url, {
+          method: formData.r_categoryId == "" ? 'POST' : 'PUT',
+          mode: 'cors',
+          body:JSON.stringify(params),
+          headers: myHeaders
+    });
+    
+    fetch(request)
+      .then(response=>response.json())
       .then(json => {
         if (json.isOk) {
           message.success(json.message);
+          this.setModalVisible(false);
         } else {
           message.error(json.message);
+          this.setModalVisible(false);
         }
       });
-    this.setModalVisible(false);
+    
   }
 
   render() {

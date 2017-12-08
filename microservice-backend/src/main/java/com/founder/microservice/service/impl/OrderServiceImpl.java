@@ -53,7 +53,6 @@ public class OrderServiceImpl implements OrderService {
 		Page<Order> page = this.orderRepository.findAll(new Specification<Order>() {
 			@Override
 			public Predicate toPredicate(Root<Order> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-				
 				Join<Order,Product> join = root.join("product", JoinType.INNER);
 	            Path<String> exp3 = join.get("productName"); 
 	            Predicate p1 = cb.like(exp3, "%"+productName+"%");
