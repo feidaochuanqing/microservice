@@ -56,7 +56,8 @@ class OrderComponent extends React.Component {
     var myFetchOptions = { method: 'GET' };
     const returnjson = {};
     const categoryId = this.state.selectedCategory;
-    fetch("http://localhost:8011/product/listAll?categoryId=" + categoryId, myFetchOptions)
+    
+    fetch("http://localhost:8011/product/listByCategory/" + categoryId, myFetchOptions)
       .then(response => response.json())
       .then(json => {
         console.log("json->" + json);

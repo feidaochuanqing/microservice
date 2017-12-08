@@ -83,7 +83,7 @@ public class ProductController extends BaseController {
 	
 	@ApiOperation(value = "查询", notes = "根据产品分类进行产品查询")
 	@ApiImplicitParam(paramType = "path", name = "categoryId", dataType = "String", required = true, value = "类别主键")
-	@RequestMapping(value = "/product/listByCategory/{categoryId}",method = RequestMethod.GET,consumes = "application/json; charset=UTF-8")
+	@RequestMapping(value = "/product/listByCategory/{categoryId}",method = RequestMethod.GET)
 	public PageBean<Product> listAll(@PathParam("categoryId") String categoryId) {
 		PageBean<Product> pageBean = null;
 		try {
