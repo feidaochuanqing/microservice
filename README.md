@@ -1,7 +1,7 @@
 # microservice
 microservice
 
-前台使用react+antd
+前台使用react+antd+adminlte(布局)
 后台使用 SpringBoot + druid + spring-data-jpa 
 
 ![Image text](https://github.com/feidaochuanqing/microservice/blob/master/demoimages/01.png)
@@ -10,3 +10,4 @@ microservice
 ![Image text](https://github.com/feidaochuanqing/microservice/blob/master/demoimages/04.png)
 ![Image text](https://github.com/feidaochuanqing/microservice/blob/master/demoimages/05.png)
 ![Image text](https://github.com/feidaochuanqing/microservice/blob/master/demoimages/06.png)
+![Image text](https://github.com/feidaochuanqing/microservice/blob/master/demoimages/07.png)
